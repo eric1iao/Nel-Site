@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBNel — Official Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --off-black: #0f0f0f;
+    --panel: #111111;
+    --border: #1e1e1e;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: #6b5520;
+    --white: #f0ede6;
+    --muted: #666;
+    --red: #c93a3a;
+    --font-display: 'Anton', sans-serif;
+    --font-head: 'Bebas Neue', cursive;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ─── NAVIGATION ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+    transition: background 0.4s;
+  }
+  nav.scrolled { background: rgba(8,8,8,0.97); border-bottom: 1px solid var(--border); }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--black);
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 0 80px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 30% 80%, rgba(201,58,58,0.05) 0%, transparent 60%),
+      linear-gradient(180deg, #080808 0%, #0c0c0c 100%);
+  }
+
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(201,168,76,0.04) 79px, rgba(201,168,76,0.04) 80px);
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-city {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  h1.hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(100px, 18vw, 220px);
+    line-height: 0.88;
+    letter-spacing: -2px;
+    color: var(--white);
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+
+  h1.hero-name span.gold { color: var(--gold); }
+
+  .hero-sub {
+    margin-top: 32px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    max-width: 420px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .hero-buttons {
+    margin-top: 40px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .btn-primary {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--black);
+    padding: 14px 28px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute;
+    right: 48px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s 1.5s forwards;
+  }
+  .hero-scroll span {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+    animation: pulse 2s infinite;
+  }
+
+  /* ─── SECTION COMMONS ─── */
+  section { padding: 100px 48px; position: relative; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  h2.section-title {
+    font-family: var(--font-head);
+    font-size: clamp(48px, 7vw, 80px);
+    line-height: 1;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 48px;
+  }
+
+  h2.section-title span { color: var(--gold); }
+
+  /* ─── ABOUT ─── */
+  #about { background: var(--off-black); border-top: 1px solid var(--border); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: #999;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .about-text p strong { color: var(--white); font-weight: 500; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 40px;
+  }
+
+  .stat-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 40px;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .about-right { display: flex; flex-direction: column; gap: 20px; }
+
+  .about-quote {
+    border-left: 3px solid var(--gold);
+    padding: 24px 28px;
+    background: var(--panel);
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--white);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .about-influences {
+    padding: 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+  }
+
+  .influences-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .influences-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 12px;
+    text-transform: uppercase;
+  }
+
+  /* ─── MUSIC ─── */
+  #music { background: var(--black); }
+
+  .music-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+    margin-bottom: 60px;
+  }
+
+  .album-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 24px 20px;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  .album-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .album-card:hover { background: #161616; }
+  .album-card:hover::before { transform: scaleX(1); }
+
+  .album-year {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .album-name {
+    font-family: var(--font-head);
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .album-type {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  .stream-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stream-btn {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 12px 24px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .stream-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .stream-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* ─── CLOTHING ─── */
+  #clothing {
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+  }
+
+  .clothing-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .clothing-visual {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .clothing-logo-display {
+    text-align: center;
+  }
+
+  .mb-logo {
+    font-family: var(--font-display);
+    font-size: 100px;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+    opacity: 0.15;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 300px;
+    pointer-events: none;
+  }
+
+  .clothing-badge {
+    position: relative;
+    z-index: 2;
+    border: 2px solid var(--gold);
+    padding: 32px 40px;
+    text-align: center;
+  }
+
+  .clothing-badge-title {
+    font-family: var(--font-display);
+    font-size: 52px;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 2px;
+  }
+
+  .clothing-badge-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--gold);
+    border-style: solid;
+  }
+  .corner-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+  .corner-tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
+  .corner-bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; }
+  .corner-br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; }
+
+  .clothing-info h3 {
+    font-family: var(--font-head);
+    font-size: 48px;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .clothing-info p {
+    color: #888;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .clothing-features {
+    list-style: none;
+    margin: 24px 0 32px;
+  }
+  .clothing-features li {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .clothing-features li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── SOCIALS ─── */
+  #socials { background: var(--black); }
+
+  .socials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2px;
+  }
+
+  .social-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+    group: true;
+  }
+
+  .social-card::after {
+    content: '→';
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    font-size: 20px;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.25s;
+  }
+
+  .social-card:hover { background: #161616; }
+  .social-card:hover::after { opacity: 1; transform: translateX(0); }
+
+  .social-platform {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .social-handle {
+    font-family: var(--font-head);
+    font-size: 28px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .social-desc {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  /* ─── VIDEOS ─── */
+  #videos { background: var(--off-black); border-top: 1px solid var(--border); }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+  }
+
+  .video-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 28px 24px;
+    transition: all 0.25s;
+    text-decoration: none;
+    display: block;
+  }
+  .video-card:hover { background: #161616; }
+
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--black);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .play-icon {
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .video-card:hover .play-icon { background: var(--gold); }
+
+  .play-icon::after {
+    content: '';
+    border-left: 14px solid var(--gold);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-left: 3px;
+    transition: border-color 0.2s;
+  }
+  .video-card:hover .play-icon::after { border-left-color: var(--black); }
+
+  .video-views {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    background: rgba(0,0,0,0.8);
+    color: var(--gold);
+    padding: 4px 8px;
+  }
+
+  .video-title {
+    font-family: var(--font-head);
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .video-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ─── BANNER ─── */
+  .marquee-banner {
+    background: var(--gold);
+    padding: 16px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-inner {
+    display: inline-flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+  }
+
+  .marquee-item {
+    font-family: var(--font-display);
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--black);
+    padding: 0 40px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+    padding: 60px 48px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+  }
+
+  .footer-brand .logo {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    display: block;
+    margin-bottom: 12px;
+    text-decoration: none;
+  }
+
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 240px;
+  }
+
+  .footer-col h4 {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 10px; }
+  .footer-col a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 300;
+  }
+  .footer-col a:hover { color: var(--white); }
+
+  .footer-bottom {
+    grid-column: 1/-1;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-bottom p {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .footer-bottom .domain {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 2px;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 70px 24px; }
+    #hero { padding: 0 0 60px 24px; }
+    .hero-scroll { right: 24px; }
+    .about-grid, .clothing-layout { grid-template-columns: 1fr; gap: 40px; }
+    .videos-grid { grid-template-columns: 1fr; }
+    footer { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">MBNEL</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#music">Music</a></li>
+    <li><a href="#clothing">Clothing</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#socials">Socials</a></li>
+  </ul>
+  <a href="https://open.spotify.com/artist/2aqdy2BLMhGFHhRb1ZbDCF" target="_blank" class="nav-cta">Stream Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <p class="hero-city">STOCKTON, CA — 209</p>
+  <p class="hero-tag">Official Website</p>
+  <h1 class="hero-name">MB<span class="gold">NEL</span></h1>
+  <p class="hero-sub">First-generation Filipino-American rapper from Stockton. From the trenches to the top — representing Muddy Boyz for life.</p>
+  <div class="hero-buttons">
+    <a href="https://open.spotify.com/artist/2aqdy2BLMhGFHhRb1ZbDCF" target="_blank" class="btn-primary">Latest Music</a>
+    <a href="https://www.marquebrand.us/collections/mbnel-show-album-merch" target="_blank" class="btn-outline">Shop Merch</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-banner">
+  <div class="marquee-inner">
+    <span class="marquee-item">MUDDY BOYZ</span>
+    <span class="marquee-item">STOCKTON</span>
+    <span class="marquee-item">209</span>
+    <span class="marquee-item">BORN TO WIN</span>
+    <span class="marquee-item">EMPIRE</span>
+    <span class="marquee-item">EPOCH</span>
+    <span class="marquee-item">MBNEL</span>
+    <span class="marquee-item">MUDDY BOYZ</span>
+    <span class="marquee-item">STOCKTON</span>
+    <span class="marquee-item">209</span>
+    <span class="marquee-item">BORN TO WIN</span>
+    <span class="marquee-item">EMPIRE</span>
+    <span class="marquee-item">EPOCH</span>
+    <span class="marquee-item">MBNEL</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label reveal">Origin Story</p>
+  <h2 class="section-title reveal">THE <span>COME</span>UP</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>Born <strong>Jhonel Dongon</strong> on December 2, 1996, MBNel came up in the streets of <strong>Stockton, California</strong> — a city that shaped every bar, every melody, every honest line he's ever written.</p>
+      <p>A <strong>first-generation Filipino-American</strong>, MBNel defied the odds stacked against him. Surrounded by poverty, gang life, and violence from an early age, he turned lived experience into art — and art into a career.</p>
+      <p>The <strong>"MB"</strong> stands for Muddy Boyz — a name rooted in Stockton's "Mudville" nickname — and Mattie Boys, named after Mattie Harrell Park where his crew came up. It's not just a rap name. It's a lifestyle.</p>
+      <p>Signed to <strong>EMPIRE</strong>, with millions of streams across Spotify and YouTube, and collaborations with BLXST, $tupid Young, Mozzy, and more — MBNel is putting Stockton on the map, one banger at a time.</p>
+      <div class="about-stats">
+        <div class="stat-box">
+          <span class="stat-num">10M+</span>
+          <span class="stat-label">YouTube Plays<br>In My City</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">206K</span>
+          <span class="stat-label">Instagram<br>Followers</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">15+</span>
+          <span class="stat-label">Projects<br>Released</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">EMPIRE</span>
+          <span class="stat-label">Label<br>Signed</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-right reveal">
+      <blockquote class="about-quote">
+        "I'll be damned if I throw away something that's positive going on for me."
+        <br><br><small style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--gold);">— MBNEL / JHONEL DONGON</small>
+      </blockquote>
+      <div class="about-influences">
+        <p class="influences-title">Influenced By</p>
+        <div class="influences-list">
+          <span class="tag">Lil Wayne</span>
+          <span class="tag">Nipsey Hussle</span>
+          <span class="tag">Mozzy</span>
+          <span class="tag">Chief Keef</span>
+          <span class="tag">Meek Mill</span>
+          <span class="tag">Lil Herb</span>
+          <span class="tag">Young Pappy</span>
+        </div>
+      </div>
+      <div class="about-influences" style="border:1px solid var(--border);">
+        <p class="influences-title">Known For</p>
+        <div class="influences-list">
+          <span class="tag">Calm Flow</span>
+          <span class="tag">Sings + Raps</span>
+          <span class="tag">Raw Lyricism</span>
+          <span class="tag">Eerie Melodies</span>
+          <span class="tag">Authentic Storytelling</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MUSIC -->
+<section id="music">
+  <p class="section-label reveal">Discography</p>
+  <h2 class="section-title reveal">THE <span>CATALOG</span></h2>
+  <div class="music-grid reveal">
+    <a href="https://open.spotify.com/track/449FqPhpX9gvnYvcc3LYSN" target="_blank" class="album-card">
+      <span class="album-year">2026</span>
+      <div class="album-name">Kept My Word</div>
+      <div class="album-type">Single</div>
+    </a>
+    <a href="https://open.spotify.com/album/1y90tQ9GGjTMTI5Ydy4g7N" target="_blank" class="album-card">
+      <span class="album-year">2025</span>
+      <div class="album-name">EPOCH</div>
+      <div class="album-type">Album</div>
+    </a>
+    <a href="https://open.spotify.com/album/5WcfMvyq8y8D8gfPIgAyyk" target="_blank" class="album-card">
+      <span class="album-year">2025</span>
+      <div class="album-name">Blame On Me</div>
+      <div class="album-type">Single</div>
+    </a>
+    <a href="https://open.spotify.com/album/2MLL5pRiDb1aQeszdhraR2" target="_blank" class="album-card">
+      <span class="album-year">2024</span>
+      <div class="album-name">Nothing More Nothing Less</div>
+      <div class="album-type">Album</div>
+    </a>
+    <a href="https://open.spotify.com/album/54zbUx3xGm14kZ3I5vf1HF" target="_blank" class="album-card">
+      <span class="album-year">2023</span>
+      <div class="album-name">8 to Infinity</div>
+      <div class="album-type">Album</div>
+    </a>
+    <a href="https://open.spotify.com/track/1idxQe6i1lhPh8J2DQlIMm" target="_blank" class="album-card">
+      <span class="album-year">2023</span>
+      <div class="album-name">Before The Fame</div>
+      <div class="album-type">Album</div>
+    </a>
+    <a href="https://open.spotify.com/album/2boBRPkG9rxQmJm80PhLaE" target="_blank" class="album-card">
+      <span class="album-year">2021</span>
+      <div class="album-name">No Hard Feelings</div>
+      <div class="album-type">Album</div>
+    </a>
+    <a href="https://open.spotify.com/album/6rPppWvk30gHtlHHgBsEf0" target="_blank" class="album-card">
+      <span class="album-year">2020</span>
+      <div class="album-name">Yellow Tape 2</div>
+      <div class="album-type">Collab — $tupid Young</div>
+    </a>
+    <a href="https://open.spotify.com/album/6h4BYuRzGKq3nOQ5hkV8Ue" target="_blank" class="album-card">
+      <span class="album-year">2019</span>
+      <div class="album-name">Born To Win</div>
+      <div class="album-type">Debut Album</div>
+    </a>
+    <a href="https://open.spotify.com/album/0klZ7b7pvTNo03HMuhE1iJ" target="_blank" class="album-card">
+      <span class="album-year">2019</span>
+      <div class="album-name">Misunderstood</div>
+      <div class="album-type">Mixtape</div>
+    </a>
+    <a href="https://open.spotify.com/album/5dFUyHVLPHmVcP0YuzJK8U" target="_blank" class="album-card">
+      <span class="album-year">2018</span>
+      <div class="album-name">Forever</div>
+      <div class="album-type">Mixtape</div>
+    </a>
+    <a href="https://open.spotify.com/album/0jDkJseIpUymyUNO14j1uy" target="_blank" class="album-card">
+      <span class="album-year">2018</span>
+      <div class="album-name">Lifestyle</div>
+      <div class="album-type">Mixtape</div>
+    </a>
+  </div>
+  <div class="stream-links reveal">
+    <a href="https://open.spotify.com/artist/2aqdy2BLMhGFHhRb1ZbDCF" target="_blank" class="stream-btn">
+      <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      Spotify
+    </a>
+    <a href="https://music.apple.com/us/artist/mbnel/1297110977" target="_blank" class="stream-btn">
+      <svg viewBox="0 0 24 24"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026C4.786.07 4.043.15 3.34.428 2.004.958 1.04 1.88.475 3.208a4.86 4.86 0 00-.312 1.48 38.412 38.412 0 00-.162 3.18v8.265c.015.595.036 1.19.108 1.778.066.522.173 1.034.37 1.525.474 1.198 1.305 2.109 2.44 2.744.517.283 1.073.448 1.65.548.427.074.857.1 1.29.12.205.01.41.015.614.015H17.993c.455-.003.91-.025 1.364-.1a5.178 5.178 0 001.945-.64c1.17-.671 1.978-1.636 2.367-2.934.2-.675.262-1.366.276-2.063.01-.53.01-1.06.01-1.59V8.56c-.003-.81-.012-1.62-.12-2.43l.159-.006zm-7.494 8.437l-1.44-.84v-5.58l1.44.84v5.58zm-4.44 2.58l-1.44-.84v-8.16l1.44.84v8.16z"/></svg>
+      Apple Music
+    </a>
+    <a href="https://music.youtube.com/channel/UCIaqpIXIkEa7Tp5j_dsJxLg" target="_blank" class="stream-btn">
+      <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      YouTube Music
+    </a>
+    <a href="https://music.amazon.com/artists/B077STJH5S/mbnel" target="_blank" class="stream-btn">
+      <svg viewBox="0 0 24 24"><path d="M13.958 10.09c0 1.232.029 2.256-.591 3.351-.502.891-1.301 1.438-2.186 1.438-1.214 0-1.922-.924-1.922-2.292 0-2.692 2.415-3.182 4.7-3.182v.685zm3.186 7.705c-.209.189-.512.201-.745.074-1.047-.872-1.234-1.275-1.814-2.107-1.734 1.768-2.962 2.297-5.209 2.297-2.66 0-4.731-1.642-4.731-4.927 0-2.565 1.391-4.309 3.37-5.164 1.715-.754 4.11-.891 5.942-1.095V6.4c0-.735.057-1.605-.373-2.239-.371-.574-1.092-.811-1.727-.811-1.171 0-2.216.6-2.471 1.843-.052.277-.256.547-.538.56l-3.003-.323c-.253-.056-.534-.261-.461-.649C5.8.956 8.512 0 10.963 0c1.254 0 2.894.334 3.883 1.286C16.12 2.432 15.981 3.974 15.981 5.6v4.178c0 1.258.521 1.81 1.012 2.488.171.241.208.529-.013.708-.547.457-1.52 1.304-2.056 1.778l.22.023zm3.15 1.817c-5.478 3.848-13.427 5.888-20.27 3.128-4.97-1.99-8.298-6.04-8.024-11.26.008-.133.127-.201.24-.143 3.26 1.71 7.098 2.74 11.127 3.04 1.25.095 2.54.13 3.838.105 1.05-.021 2.137-.098 3.203-.224.253-.03.506-.061.757-.096 2.056-.283 4.137-.773 6.088-1.494.153-.057.3.074.255.228-.044.15-.094.3-.144.448-.085.249-.178.494-.277.735z"/></svg>
+      Amazon Music
+    </a>
+  </div>
+</section>
+
+<!-- CLOTHING -->
+<section id="clothing">
+  <p class="section-label reveal">Muddy Boyz Brand</p>
+  <h2 class="section-title reveal">THE <span>DRIP</span></h2>
+  <div class="clothing-layout">
+    <div class="clothing-visual reveal">
+      <span class="mb-logo">MB</span>
+      <div class="clothing-badge">
+        <div class="corner-tl"></div>
+        <div class="corner-tr"></div>
+        <div class="corner-bl"></div>
+        <div class="corner-br"></div>
+        <div class="clothing-badge-title">MUDDY<br>BOYZ</div>
+        <div class="clothing-badge-sub">It's A Lifestyle</div>
+      </div>
+    </div>
+    <div class="clothing-info reveal">
+      <h3>MBMarque &<br>Muddy Boyz</h3>
+      <p>More than a rap name — Muddy Boyz is a full lifestyle brand. Born in the 209, built on the same authenticity that drives the music. From limited-run tees to branded accessories, the MB apparel line is street-ready and culture-driven.</p>
+      <p>MBMarque represents the premium side of the brand — exclusive drops that move as fast as the music. If you sleep, you miss it.</p>
+      <ul class="clothing-features">
+        <li>Limited Edition Drops</li>
+        <li>Muddy Boyz Tees, Hoodies & Accessories</li>
+        <li>MBMarque Premium Line</li>
+        <li>Authentic 209 / Stockton Roots</li>
+        <li>Worn by the artist himself</li>
+      </ul>
+      <a href="https://www.marquebrand.us/collections/mbnel-show-album-merch" target="_blank" class="btn-primary">Shop The Brand</a>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section id="videos">
+  <p class="section-label reveal">Visual Content</p>
+  <h2 class="section-title reveal">WATCH <span>THE WAVE</span></h2>
+  <div class="videos-grid reveal">
+    <a href="https://www.youtube.com/watch?v=Fw-3iJL0z5A" target="_blank" class="video-card">
+      <div class="video-thumb">
+        <div class="play-icon"></div>
+        <span class="video-views">7.3M Views</span>
+      </div>
+      <div class="video-title">Ashtray</div>
+      <div class="video-meta">O Side Mafia Feat. MBNel</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=MBNel+In+My+City" target="_blank" class="video-card">
+      <div class="video-thumb">
+        <div class="play-icon"></div>
+        <span class="video-views">10M+ Views</span>
+      </div>
+      <div class="video-title">In My City</div>
+      <div class="video-meta">Breakout Hit · Forever</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=MBNel+Feels+Different" target="_blank" class="video-card">
+      <div class="video-thumb">
+        <div class="play-icon"></div>
+        <span class="video-views">132K Views</span>
+      </div>
+      <div class="video-title">Feels Different</div>
+      <div class="video-meta">2025 · Latest Visual</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=MBNel+On+Me+Stupid+Young" target="_blank" class="video-card">
+      <div class="video-thumb">
+        <div class="play-icon"></div>
+        <span class="video-views">6M+ Views</span>
+      </div>
+      <div class="video-title">On Me</div>
+      <div class="video-meta">Feat. $tupid Young</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=MBNel+Manifested" target="_blank" class="video-card">
+      <div class="video-thumb">
+        <div class="play-icon"></div>
+        <span class="video-views">Millions of plays</span>
+      </div>
+      <div class="video-title">Manifested</div>
+      <div class="video-meta">2021 · No Hard Feelings</div>
+    </a>
+    <a href="https://www.youtube.com/results?search_query=MBNel+Lost+Time" target="_blank" class="video-card">
+      <div class="video-thumb">
+        <div class="play-icon"></div>
+        <span class="video-views">47K Views</span>
+      </div>
+      <div class="video-title">Lost Time</div>
+      <div class="video-meta">2026 · Latest Release</div>
+    </a>
+  </div>
+</section>
+
+<!-- SOCIALS -->
+<section id="socials">
+  <p class="section-label reveal">Connect</p>
+  <h2 class="section-title reveal">FIND THE <span>MOB</span></h2>
+  <div class="socials-grid reveal">
+    <a href="https://www.instagram.com/nellynelmb/" target="_blank" class="social-card">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c9a84c" stroke="none"/>
+      </svg>
+      <span class="social-platform">Instagram</span>
+      <div class="social-handle">@nellynelmb</div>
+      <div class="social-desc">206K Followers · Main page for drops, videos, and daily life</div>
+    </a>
+    <a href="https://www.tiktok.com/@officialmbnel" target="_blank" class="social-card">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="#c9a84c">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.7a8.18 8.18 0 004.79 1.52V6.73a4.85 4.85 0 01-1.02-.04z"/>
+      </svg>
+      <span class="social-platform">TikTok</span>
+      <div class="social-handle">@officialmbnel</div>
+      <div class="social-desc">46.6K Followers · 450K+ Likes</div>
+    </a>
+    <a href="https://open.spotify.com/artist/2aqdy2BLMhGFHhRb1ZbDCF" target="_blank" class="social-card">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="#c9a84c">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+      </svg>
+      <span class="social-platform">Spotify</span>
+      <div class="social-handle">MBNel</div>
+      <div class="social-desc">Stream the full catalog — millions of plays worldwide</div>
+    </a>
+    <a href="https://music.youtube.com/channel/UCIaqpIXIkEa7Tp5j_dsJxLg" target="_blank" class="social-card">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="#c9a84c">
+        <path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/>
+      </svg>
+      <span class="social-platform">YouTube</span>
+      <div class="social-handle">MBNel</div>
+      <div class="social-desc">Official music videos · 356K+ views · All projects</div>
+    </a>
+    <a href="https://music.apple.com/us/artist/mbnel/1297110977" target="_blank" class="social-card">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="#c9a84c">
+        <path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026C4.786.07 4.043.15 3.34.428 2.004.958 1.04 1.88.475 3.208a4.86 4.86 0 00-.312 1.48 38.412 38.412 0 00-.162 3.18v8.265c.015.595.036 1.19.108 1.778.066.522.173 1.034.37 1.525.474 1.198 1.305 2.109 2.44 2.744.517.283 1.073.448 1.65.548.427.074.857.1 1.29.12.205.01.41.015.614.015H17.993c.455-.003.91-.025 1.364-.1a5.178 5.178 0 001.945-.64c1.17-.671 1.978-1.636 2.367-2.934.2-.675.262-1.366.276-2.063.01-.53.01-1.06.01-1.59V8.56c-.003-.81-.012-1.62-.12-2.43z"/>
+      </svg>
+      <span class="social-platform">Apple Music</span>
+      <div class="social-handle">MBNel</div>
+      <div class="social-desc">Full discography available — add to library</div>
+    </a>
+    <a href="https://www.marquebrand.us/collections/mbnel-show-album-merch" target="_blank" class="social-card">
+      <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="social-platform">Shop</span>
+      <div class="social-handle">Muddy Boyz Store</div>
+      <div class="social-desc">Official merch — tees, hoodies, accessories. It's a lifestyle.</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="logo">MBNEL</a>
+    <p>Official home of MBNel — Stockton's finest. Muddy Boyz for life. Signed to EMPIRE.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Navigate</h4>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#music">Music</a></li>
+      <li><a href="#clothing">Clothing</a></li>
+      <li><a href="#videos">Videos</a></li>
+      <li><a href="#socials">Socials</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Links</h4>
+    <ul>
+      <li><a href="https://open.spotify.com/artist/2aqdy2BLMhGFHhRb1ZbDCF" target="_blank">Spotify</a></li>
+      <li><a href="https://music.apple.com/us/artist/mbnel/1297110977" target="_blank">Apple Music</a></li>
+      <li><a href="https://www.instagram.com/nellynelmb/" target="_blank">Instagram</a></li>
+      <li><a href="https://www.tiktok.com/@officialmbnel" target="_blank">TikTok</a></li>
+      <li><a href="https://www.marquebrand.us/collections/mbnel-show-album-merch" target="_blank">Merch Store</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 MBNel / Muddy Boyz Entertainment. All Rights Reserved.</p>
+    <span class="domain">nellynelmb.com</span>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
